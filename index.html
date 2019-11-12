@@ -7,12 +7,12 @@
 		function loadFile() {
 			/* Step 1: Make instance of request object...
 			...to make HTTP request after page is loaded*/
-			request = new XMLHttpRequest();
+			request = new XMLHttpRequest({mozSystem: true});
 			console.log("1 - request object created");
  
 			// Step 2: Set the URL for the AJAX request to be the JSON file
  
-			request.open("GET", "http://www.recipepuppy.com/api/?i=onions,garlic&q=omelet&p=3", true);
+			request.open("GET", "https://api.punkapi.com/v2/beers/random", true);
 
 			console.log("2 - opened request file");
  
@@ -26,15 +26,14 @@
 					// Step 5: wait for done + success
 
 					result = request.responseText;
-					recipe = JSON.parse(result);
+                    var randBeer = JSON.parse(result);
+                    // beers = JSON.stringify(result);
 					
-				    // parsed = "<ul>";
-					// recipe.forEach(function(food) { 
-					//   parsed += "<li>" + food.title + " : " + food.ingredients + "</li>" + food.href + "</li>";
-					// }) 
-					// strHTML += "</ul>";
-                    document.getElementById("data").innerHTML =strHTML;  
-                    document.getElementById("data").innerHTML ="Recipe: " + recipe["results"]["Vegetable-Pasta Oven Omelet"]; 
+                    document.getElementById("data").innerHTML = "Here's a random beer: <br> Name: " + randBeer[0].name +
+                                                                "<br> Tagline: " + randBeer[0].tagline + 
+                                                                "<br> Description: " + randBeer[0].description + 
+                                                                "<br> ABV: " + randBeer[0].abv
+                                                                "<br> First brewed: " + randBeer[0].first_brewed; 
 				}
 				else if (request.readyState == 4 && request.status != 200) {
 
@@ -59,7 +58,7 @@
 
 <body onload="loadFile()">
 
-	<h1>Recipes</h1>
+	<h1>Random Beers</h1>
 	<div id="data">Loading...</div>
 </body>
 </html>
