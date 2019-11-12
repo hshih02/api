@@ -3,7 +3,7 @@
 <head>
 	<title>Messages</title>
 	<meta charset="utf-8"/>
-	<script>
+	<script language="javascript">
 		function loadFile() {
 			/* Step 1: Make instance of request object...
 			...to make HTTP request after page is loaded*/
@@ -26,14 +26,15 @@
 					// Step 5: wait for done + success
 
 					result = request.responseText;
-					animals = JSON.parse(result);
+					recipe = JSON.parse(result);
 					
-				    paresed = "<ul>";
-					recipe.forEach(function(animal) { 
-					  parsed += "<li>" + recipe.title + " : " + recipe.ingredients + "</li>" + recipe.href + "</li>";
-					}) 
-					strHTML += "</ul>";
-					document.getElementById("data").innerHTML =strHTML;  
+				    // parsed = "<ul>";
+					// recipe.forEach(function(food) { 
+					//   parsed += "<li>" + food.title + " : " + food.ingredients + "</li>" + food.href + "</li>";
+					// }) 
+					// strHTML += "</ul>";
+                    document.getElementById("data").innerHTML =strHTML;  
+                    document.getElementById("data").innerHTML ="Recipe: " + recipe["results"]["Vegetable-Pasta Oven Omelet"]; 
 				}
 				else if (request.readyState == 4 && request.status != 200) {
 
