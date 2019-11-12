@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Messages</title>
+    <meta charset="utf-8" />
+    <script>
+        var request = require('request'); // "Request" library
+        var client_id = 'b41ab6fc40224a82a36a1975c0a9738d'; // Your client id
+        var client_secret = '0669d58da30d4f308fa5573fd880aa88'; // Your secret
+
+        var authOptions = {
+            url: 'https://accounts.spotify.com/api/token',
+            headers: {
+                'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+            },
+            form: {
+                grant_type: 'client_credentials'
+            },
+            json: true
+        };
+
+
+        var params = getHashParams();
+
+        var access_token = params.access_token,
+            state = params.state,
+            storedState = localStorage.getItem(stateKey);
+
+        if (access_token && (state == null || state !== storedState)) {
+            alert('There was an error during the authentication');
+        } else {
+            localStorage.removeItem(stateKey);
+            if (access_token) {
+                $.ajax({
+                    url: 'https://api.spotify.com/v1/me',
+                    headers: {
+                        'Authorization': 'Bearer ' + access_token
+                    },
+                    success: function (response) {
+                        userProfilePlaceholder.innerHTML = userProfileTemplate(response);
+
+                        $('#login').hide();
+                        $('#loggedin').show();
+                    }
+                });
+            } else {
+                $('#login').show();
+                $('#loggedin').hide();
+            }
+        }
+
+            function loadFile() {
+                /* Step 1: Make instance of request object...
+                ...to make HTTP request after page is loaded*/
+                request = new XMLHttpRequest();
+                console.log("1 - request object created");
+
+                // Step 2: Set the URL for the AJAX request to be the JSON file
+
+                request.open("GET", "GET https://api.spotify.com/v1/tracks/{3ZOEytgrvLwQaqXreDs2Jx}", true);
+
+                console.log("2 - opened request file");
+
+                // Step 3: set up event handler/callback
+
+                request.onreadystatechange = function () {
+                    console.log("3 - readystatechange event fired.");
+
+                    if (request.readyState == 4 && request.status == 200) {
+
+                        // Step 5: wait for done + success
+
+                        result = request.responseText;
+                        animals = JSON.parse(result);
+
+                        strHTML = "<ul>";
+                        animals.forEach(function (animal) {
+                            strHTML += "<li>" + animal.name + " : " + animal.type + "</li>";
+                        })
+                        strHTML += "</ul>";
+                        document.getElementById("data").innerHTML = strHTML;
+                    }
+                    else if (request.readyState == 4 && request.status != 200) {
+
+                        document.getElementById("data").innerHTML = "Something is wrong!  Check the logs to see where this went off the rails";
+
+                    }
+
+                    else if (request.readyState == 3) {
+
+                        document.getElementById("data").innerHTML = "Too soon!  Try again";
+
+                    }
+
+                }
+                // Step 4: fire off the HTTP request
+                request.send();
+                console.log("4 - Request sent");
+            }
+    </script>
+</head>
+
+
+<body onload="loadFile()">
+
+    <h1>spoofy</h1>
+    <div id="data">Loading...</div>
+</body>
+
+</html>
